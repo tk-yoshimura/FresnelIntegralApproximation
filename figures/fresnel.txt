@@ -33,3 +33,10 @@
                      - \sin \left( \frac{\pi x^2}{2} \right) \left( \sum_{k=0}^{\infty} \frac{(-1)^k r_{2 k + 1}}{\pi^{2k+2} x^{4k+3}} \right) \\
       && r_k = - \prod_{i=0}^{k} (2 i - 1)
 \end{eqnarray*}
+
+\begin{eqnarray*}
+\sum_{k=0}^{\infty} \frac{(-1)^k r_{2 k}}{\pi^{2k+1} x^{4k+1}} &=& \sum_{k=0}^{\infty} \left( \frac{r_{4 k}}{\pi^{4k+1} x^{8k+1}} - \frac{r_{4 k+2}}{\pi^{4k+3} x^{8k+5}} \right) \\
+                                                               &=& \sum_{k=0}^{\infty} \frac{r_{4 k}}{\pi^{4k+1} x^{8k+1}}\left( 1 - \frac{(8k+1)(8k+3)}{\pi^{2} x^{4}} \right) \\
+\sum_{k=0}^{\infty} \frac{(-1)^k r_{2 k + 1}}{\pi^{2k+2} x^{4k+3}} &=& \sum_{k=0}^{\infty} \left( \frac{r_{4 k + 1}}{\pi^{4k+2} x^{8k+3}} - \frac{r_{4 k + 3}}{\pi^{4k+4} x^{8k+7}} \right) \\
+                                                                   &=& \sum_{k=0}^{\infty} \frac{r_{4 k + 1}}{\pi^{4k+2} x^{8k+3}}\left( 1 - \frac{(8k+3)(8k+5)}{\pi^{2} x^{4}} \right)
+\end{eqnarray*}

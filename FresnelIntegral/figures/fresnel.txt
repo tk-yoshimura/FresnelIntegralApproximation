@@ -1,0 +1,27 @@
+\begin{eqnarray*}
+  C(x)&=& \int_0^x \cos \left(\frac{\pi t^2}{2} \right) dt
+\end{eqnarray*}
+
+\begin{eqnarray*}
+  S(x)&=& \int_0^x \sin \left(\frac{\pi t^2}{2} \right) dt
+\end{eqnarray*}
+
+\begin{eqnarray*}
+  C(x)&=& x \sum_{k=0}^{\infty} \frac{(-1)^k \pi^{2 k} x^{4 k}}{4^k (4k+1)(2k)!} \\
+      &=& x \sum_{k=0}^{\infty} \left( \frac{\pi^{4 k} x^{8 k}}{4^{2 k} (8k+1)(4k)!} - \frac{\pi^{4 k+2} x^{8 k+4}}{4^{2 k+1} (8k+5)(4k+2)!}}  \right) \\
+      &=& x \sum_{k=0}^{\infty} \frac{\pi^{4 k} x^{8 k}}{16^k (4k)!} \left( \frac{1}{8k+1}  - \frac{\pi^{2} x^{4}}{4 (8k+5)(4k+1)(4k+2)}  \right)
+\end{eqnarray*}
+
+\begin{eqnarray*}
+  S(x)&=&\frac{\pi x^3}{2} \sum_{k=0}^{\infty} \frac{(-1)^k \pi^{2 k} x^{4 k}}{4^k (4k+3)(2k+1)!} \\
+      &=&\frac{\pi x^3}{2} \sum_{k=0}^{\infty} \left( \frac{\pi^{4 k} x^{8 k}}{4^{2 k} (8k+3)(4k+1)!} - \frac{\pi^{4 k + 2} x^{8 k + 4}}{4^{2 k + 1} (8k+7)(4k+3)!}  \right) \\
+      &=&\frac{\pi x^3}{2} \sum_{k=0}^{\infty} \frac{\pi^{4 k} x^{8 k}}{16^{k}(4k+1)!}\left( \frac{1}{8k+3}  - \frac{\pi^{2} x^{4}}{4 (8k+7)(4k+2)(4k+3)}  \right)
+\end{eqnarray*}
+
+\begin{eqnarray*}
+  C(x)&\rightarrow& \frac{1}{2} + \frac{1}{\pi x} \sin \left(\frac{\pi x^2}{2} \right)~~(x \rightarrow \infty)
+\end{eqnarray*}
+
+\begin{eqnarray*}
+  S(x)&\rightarrow& \frac{1}{2} - \frac{1}{\pi x} \cos \left(\frac{\pi x^2}{2} \right)~~(x \rightarrow \infty)
+\end{eqnarray*}

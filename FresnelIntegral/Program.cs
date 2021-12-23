@@ -1,33 +1,18 @@
 ﻿using MultiPrecision;
 using System;
+using System.IO;
 
 namespace FresnelIntegral {
     internal class Program {
         static void Main() {
-            const double threshold = 10.75d;
+            using (StreamWriter sw = new("../../../../results/fresnel_value_table.csv")) {
+                sw.WriteLine("x,fresnel_c(x),fresnel_s(x)");
 
-            for (MultiPrecision<Pow2.N8> x = 0; x <= threshold; x += 1 / 64d) {
-                MultiPrecision<Pow2.N8> y = NearZero<Pow2.N8, Pow2.N16>.FresnelC(x);
+                for (MultiPrecision<Pow2.N8> x = 0; x <= 128; x += 1 / 64d) {
+                    (MultiPrecision<Pow2.N8> c, MultiPrecision<Pow2.N8> s) = FresnelN8.Value(x);
 
-                Console.WriteLine($"{x},{y}");
-            }
-
-            for (MultiPrecision<Pow2.N8> x = threshold; x <= 128; x += 1 / 16d) {
-                MultiPrecision<Pow2.N8> y = Limit<Pow2.N8>.Fresnel(x).c;
-
-                Console.WriteLine($"{x},{y}");
-            }
-
-            for (MultiPrecision<Pow2.N8> x = 0; x <= threshold; x += 1 / 64d) {
-                MultiPrecision<Pow2.N8> y = NearZero<Pow2.N8, Pow2.N16>.FresnelS(x);
-
-                Console.WriteLine($"{x},{y}");
-            }
-
-            for (MultiPrecision<Pow2.N8> x = threshold; x <= 128; x += 1 / 16d) {
-                MultiPrecision<Pow2.N8> y = Limit<Pow2.N8>.Fresnel(x).s;
-
-                Console.WriteLine($"{x},{y}");
+                    sw.WriteLine($"{x},{c},{s}");
+                }
             }
 
             Console.WriteLine("END");

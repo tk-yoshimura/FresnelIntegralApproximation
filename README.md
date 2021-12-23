@@ -25,3 +25,7 @@ Fresnel sine integral:
 ![limit fresnel](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/limit_fresnel.svg)
 
 ![limit fresnel2](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/limit_fresnel2.svg)
+
+## Table
+
+[numeric table](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnel_value_table.csv)

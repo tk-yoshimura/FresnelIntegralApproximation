@@ -28,6 +28,6 @@ Fresnel sine integral:
 
 ## Table
 
-[numeric table](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnel_value_table.csv)  
+[NumericTable](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnel_value_table.csv)  
 [C(x)=1/2](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnelc_point5s.csv)  
 [S(x)=1/2](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnels_point5s.csv)

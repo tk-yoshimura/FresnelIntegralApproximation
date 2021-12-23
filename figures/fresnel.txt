@@ -25,3 +25,11 @@
 \begin{eqnarray*}
   S(x)&\rightarrow& \frac{1}{2} - \frac{1}{\pi x} \cos \left(\frac{\pi x^2}{2} \right)~~(x \rightarrow \infty)
 \end{eqnarray*}
+
+\begin{eqnarray*}
+  C(x)&=& \frac{1}{2}+ \sin \left( \frac{\pi x^2}{2} \right) \left( \sum_{k=0}^{\infty} \frac{(-1)^k r_{2 k}}{\pi^{2k+1} x^{4k+1}} \right)
+                     - \cos \left( \frac{\pi x^2}{2} \right) \left( \sum_{k=0}^{\infty} \frac{(-1)^k r_{2 k + 1}}{\pi^{2k+2} x^{4k+3}} \right) \\
+  S(x)&=& \frac{1}{2}- \cos \left( \frac{\pi x^2}{2} \right) \left( \sum_{k=0}^{\infty} \frac{(-1)^k r_{2 k}}{\pi^{2k+1} x^{4k+1}} \right)
+                     - \sin \left( \frac{\pi x^2}{2} \right) \left( \sum_{k=0}^{\infty} \frac{(-1)^k r_{2 k + 1}}{\pi^{2k+2} x^{4k+3}} \right) \\
+      && r_k = - \prod_{i=0}^{k} (2 i - 1)
+\end{eqnarray*}

@@ -21,5 +21,31 @@ namespace FresnelIntegral {
                 return Limit<Pow2.N8>.Fresnel(x);
             }
         }
+
+        public static MultiPrecision<Pow2.N8> FresnelC(MultiPrecision<Pow2.N8> x) {
+            if (x.Sign == Sign.Minus) {
+                return -FresnelC(-x);
+            }
+
+            if (x < threshold) {
+                return NearZero<Pow2.N8, Pow2.N16>.FresnelC(x);
+            }
+            else {
+                return Limit<Pow2.N8>.Fresnel(x).c;
+            }
+        }
+
+        public static MultiPrecision<Pow2.N8> FresnelS(MultiPrecision<Pow2.N8> x) {
+            if (x.Sign == Sign.Minus) {
+                return -FresnelS(-x);
+            }
+
+            if (x < threshold) {
+                return NearZero<Pow2.N8, Pow2.N16>.FresnelS(x);
+            }
+            else {
+                return Limit<Pow2.N8>.Fresnel(x).s;
+            }
+        }
     }
 }

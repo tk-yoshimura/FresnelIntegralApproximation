@@ -1,10 +1,11 @@
 ﻿using MultiPrecision;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace FresnelIntegral {
     internal static class TaylorSeries<N> where N: struct, IConstant {
-        private static MultiPrecision<N> v;
+        private static BigInteger v;
         private readonly static List<MultiPrecision<N>> table;
 
         static TaylorSeries() {

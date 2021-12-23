@@ -17,11 +17,11 @@ namespace FresnelIntegral {
 
             MultiPrecision<M> s = 0, u = x_ex;
 
-            int k = 0;
+            long k = 0;
             
-            for (int conv_times = 0; k < max_terms && conv_times < 3; k++) {
-                MultiPrecision<M> f = MultiPrecision<M>.Ldexp(u * TaylorSeries<M>.Value(4 * k), -4 * k);
-                MultiPrecision<M> ds = f * (MultiPrecision<M>.Div(1, 8 * k + 1) - v2 / (4 * (8 * k + 5) * (4 * k + 1) * (4 * k + 2)));
+            for (long conv_times = 0; k < max_terms && conv_times < 3; k++) {
+                MultiPrecision<M> f = MultiPrecision<M>.Ldexp(u * TaylorSeries<M>.Value(checked((int)(4 * k))), -4 * k);
+                MultiPrecision<M> ds = f * (MultiPrecision<M>.Div(1, 8 * k + 1) - v2 / checked(4 * (8 * k + 5) * (4 * k + 1) * (4 * k + 2)));
 
                 if (ds.Exponent < -MultiPrecision<N>.Bits - 1) {
                     conv_times++;
@@ -33,12 +33,10 @@ namespace FresnelIntegral {
                 s += ds;
                 u *= v4;
 
-                if (s.Exponent > MultiPrecision<N>.Bits) { 
+                if (s.Exponent > MultiPrecision<M>.Bits - MultiPrecision<N>.Bits) { 
                     return MultiPrecision<N>.NaN;
                 }
             }
-
-            var n = TaylorSeries<M>.Value(4 * max_terms);
 
             if (k < max_terms) {
                 return s.Convert<N>();

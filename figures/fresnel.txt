@@ -45,3 +45,20 @@
   C(x)&=& \frac{1}{2}+ f(x) \sin \left( \frac{\pi x^2}{2} \right) - g(x) \cos \left( \frac{\pi x^2}{2} \right) \\
   S(x)&=& \frac{1}{2}- f(x) \cos \left( \frac{\pi x^2}{2} \right) - g(x) \sin \left( \frac{\pi x^2}{2} \right)
 \end{eqnarray*}
+
+\begin{eqnarray*}
+  f(x) &=& \frac{1}{2} \left( (1-2 S(x)) \cos \left( \frac{\pi x^2}{2} \right) - (1-2 C(x)) \sin \left( \frac{\pi x^2}{2} \right) \right) \\
+  g(x) &=& \frac{1}{2} \left( (1-2 S(x)) \sin \left( \frac{\pi x^2}{2} \right) + (1-2 C(x)) \cos \left( \frac{\pi x^2}{2} \right) \right)
+\end{eqnarray*}
+
+\begin{eqnarray*}
+ && \begin{array}{lll}
+  f'(x) = -\pi x g(x), & & g'(x)= \pi x f(x) - 1 \\
+  f''(x) = -\pi \left( g(x) + x g'(x) \right), & & g''(x) = \pi \left( f(x) + x f'(x) \right) \\
+  f'''(x) = -\pi \left( 2 g'(x) + x g''(x)  \right), & & g'''(x) = \pi \left( 2 f'(x) + x f''(x) \right) \\
+  f''''(x) = -\pi \left( 3 g''(x) + x g'''(x)  \right), & & g''''(x) = \pi \left( 3 f''(x) + x f'''(x) \right) \\
+  & \vdots & \\
+\end{array} \\
+ && f^{(n)}(x) = -\pi \left( (n-1) g^{(n-2)}(x) + x g^{(n-1)}(x)  \right)\\
+ && g^{(n)}(x) = \pi \left( (n-1) f^{(n-2)}(x) + x f^{(n-1)}(x) \right) ~~~~(n \geq 2)\\
+\end{eqnarray*}

@@ -38,8 +38,7 @@ Fresnel sine integral:
 
 ![approx fg1](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/approx_fg1.svg)  
 ![approx fg2](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/approx_fg2.svg)  
+[NumericTable](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnel_fg.csv)  
 
 ![plot fresnelfg](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/plot_fresnel_fg.svg)  
 ![plot fresnelfg log](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/plot_fresnel_fg_log.svg)  
-
-[NumericTable](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnel_fg.csv)  

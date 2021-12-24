@@ -1,19 +1,22 @@
 ﻿using MultiPrecision;
 using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace FresnelIntegral {
     internal class Program {
         static void Main() {
-            using (StreamWriter sw = new("../../../../results_disused/fresnel_fg16.csv")) {
-                sw.WriteLine("x,f(x),g(x)");
-                for (MultiPrecision<Pow2.N16> x = 0; x <= 128; x += 1d / 64) {
-                    (MultiPrecision<Pow2.N16> f, MultiPrecision<Pow2.N16> g) = FGExpandN16.Value(x);
-
-                    sw.WriteLine($"{x},{f},{g}");
-                }
-            }
+            (var m, var n) = PadeSolver<Pow2.N8>.Solve(new MultiPrecision<Pow2.N8>[] {
+                1,
+                1,
+                MultiPrecision<Pow2.N8>.Rcp(2),
+                MultiPrecision<Pow2.N8>.Rcp(6),
+                MultiPrecision<Pow2.N8>.Rcp(24),
+                MultiPrecision<Pow2.N8>.Rcp(120),
+                MultiPrecision<Pow2.N8>.Rcp(720),
+                MultiPrecision<Pow2.N8>.Rcp(5040),
+                MultiPrecision<Pow2.N8>.Rcp(40320),
+                MultiPrecision<Pow2.N8>.Rcp(362880),
+                MultiPrecision<Pow2.N8>.Rcp(3628800),
+            }, 5, 5);
 
             Console.WriteLine("END");
             Console.Read();

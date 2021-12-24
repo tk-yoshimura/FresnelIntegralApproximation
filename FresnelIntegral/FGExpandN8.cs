@@ -1,5 +1,5 @@
-﻿using System;
-using MultiPrecision;
+﻿using MultiPrecision;
+using System;
 
 namespace FresnelIntegral {
     internal static class FGExpandN8 {

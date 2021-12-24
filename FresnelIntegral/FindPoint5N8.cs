@@ -1,9 +1,4 @@
 ﻿using MultiPrecision;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FresnelIntegral {
     internal static class FindPoint5N8 {
@@ -19,8 +14,8 @@ namespace FresnelIntegral {
                 MultiPrecision<Pow2.N8> d = MultiPrecision<Pow2.N8>.CosPI(x * x / 2);
                 MultiPrecision<Pow2.N8> dx = y / d;
 
-                if ((dx.Exponent < x.Exponent - MultiPrecision<Pow2.N8>.Bits) ||                    
-                    (MultiPrecision<Pow2.N8>.Abs(prev_dx) <= MultiPrecision<Pow2.N8>.Abs(dx))) { 
+                if ((dx.Exponent < x.Exponent - MultiPrecision<Pow2.N8>.Bits) ||
+                    (MultiPrecision<Pow2.N8>.Abs(prev_dx) <= MultiPrecision<Pow2.N8>.Abs(dx))) {
 
                     return x;
                 }
@@ -42,8 +37,8 @@ namespace FresnelIntegral {
                 MultiPrecision<Pow2.N8> d = MultiPrecision<Pow2.N8>.SinPI(x * x / 2);
                 MultiPrecision<Pow2.N8> dx = y / d;
 
-                if ((dx.Exponent < x.Exponent - MultiPrecision<Pow2.N8>.Bits) ||                    
-                    (MultiPrecision<Pow2.N8>.Abs(prev_dx) <= MultiPrecision<Pow2.N8>.Abs(dx))) { 
+                if ((dx.Exponent < x.Exponent - MultiPrecision<Pow2.N8>.Bits) ||
+                    (MultiPrecision<Pow2.N8>.Abs(prev_dx) <= MultiPrecision<Pow2.N8>.Abs(dx))) {
 
                     return x;
                 }

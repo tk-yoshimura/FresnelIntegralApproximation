@@ -41,5 +41,8 @@ Fresnel sine integral:
 ![approx fg3](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/approx_fg3.svg)  
 [NumericTable](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/fresnel_fg.csv)  
 
+[PadeCoefTable](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/results/pade_table.csv)  
+See also: [PadeApproximation](https://github.com/tk-yoshimura/PadeApproximation/)  
+
 ![plot fresnelfg](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/plot_fresnel_fg.svg)  
 ![plot fresnelfg log](https://github.com/tk-yoshimura/FresnelIntegralApproximation/blob/main/figures/plot_fresnel_fg_log.svg)  

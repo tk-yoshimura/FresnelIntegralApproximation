@@ -62,6 +62,18 @@ namespace FresnelIntegral {
                 }
             }
 
+            //using (StreamWriter sw = new("../../../../results_disused/fresnelc_table.csv")) {
+            //    for (double x = 1d / 16; x <= 16; x += 1d / 16) {
+            //        sw.WriteLine($"\"{FresnelN8.FresnelC(x):e40}\",");
+            //    }
+            //}
+            //
+            //using (StreamWriter sw = new("../../../../results_disused/fresnels_table.csv")) {
+            //    for (double x = 1d / 16; x <= 16; x += 1d / 16) {
+            //        sw.WriteLine($"\"{FresnelN8.FresnelS(x):e40}\",");
+            //    }
+            //}
+
             Console.WriteLine("END");
             Console.Read();
         }

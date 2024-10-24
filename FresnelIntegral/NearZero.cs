@@ -6,7 +6,7 @@ namespace FresnelIntegral {
             if (x.Sign == Sign.Minus) {
                 return -FresnelC(-x);
             }
-            if (x.IsZero) {
+            if (MultiPrecision<N>.IsZero(x)) {
                 return 0;
             }
 
@@ -51,7 +51,7 @@ namespace FresnelIntegral {
             if (x.Sign == Sign.Minus) {
                 return -FresnelS(-x);
             }
-            if (x.IsZero) {
+            if (MultiPrecision<N>.IsZero(x)) {
                 return 0;
             }
 

@@ -1,42 +1,36 @@
 ﻿using MultiPrecision;
+using MultiPrecisionAlgebra;
+using MultiPrecisionCurveFitting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FresnelIntegral {
     internal class Program {
         static void Main() {
-            for (double x = 16; x <= 20; x += 1d / 16) {
-                MultiPrecision<Pow2.N16> y = FresnelN16.FresnelS(x);
-
-                Console.WriteLine($"\"{y:e40}\",");
-            }
-
-
             static (MultiPrecision<Pow2.N16> f, MultiPrecision<Pow2.N16> g) invg16(MultiPrecision<Pow2.N16> x) {
-                MultiPrecision<Pow2.N16> v = MultiPrecision<Pow2.N16>.Pow2(x);
-                (MultiPrecision<Pow2.N16> f, MultiPrecision<Pow2.N16> g) = FGExpandN16.Value(v);
+                (MultiPrecision<Pow2.N16> f, MultiPrecision<Pow2.N16> g) = FGExpandN16.Value(x);
 
-                f = MultiPrecision<Pow2.N16>.Log2(f);
-                g = MultiPrecision<Pow2.N16>.Log2(g);
-            
+                f *= x;
+                g *= x * x * x;
+
                 return (f, g);
             };
 
-             static (MultiPrecision<Pow2.N32> f, MultiPrecision<Pow2.N32> g) invg32(MultiPrecision<Pow2.N32> x) {
-                MultiPrecision<Pow2.N32> v = MultiPrecision<Pow2.N32>.Pow2(x);
-                (MultiPrecision<Pow2.N32> f, MultiPrecision<Pow2.N32> g) = FGExpandN32.Value(v);
+            static (MultiPrecision<Pow2.N32> f, MultiPrecision<Pow2.N32> g) invg32(MultiPrecision<Pow2.N32> x) {
+                (MultiPrecision<Pow2.N32> f, MultiPrecision<Pow2.N32> g) = FGExpandN32.Value(x);
 
-                f = MultiPrecision<Pow2.N32>.Log2(f);
-                g = MultiPrecision<Pow2.N32>.Log2(g);
-            
+                f *= x;
+                g *= x * x * x;
+
                 return (f, g);
             };
 
-            using (StreamWriter sw = new("../../../../results/fresnel_log2log2_fg.csv")) {
+            using (StreamWriter sw = new("../../../../results/fresnel_scaled_fg.csv")) {
                 sw.WriteLine("x,f,g");
 
-                for (double x = 0; x <= 8; x += 1d / 32) {
+                for (double x = 0; x <= 16; x += 1d / 32) {
                     (MultiPrecision<Pow2.N16> f, MultiPrecision<Pow2.N16> g) = invg16(x);
 
                     sw.WriteLine($"{x},{f},{g}");
@@ -44,93 +38,143 @@ namespace FresnelIntegral {
                     Console.WriteLine($"{x}\t{f}\t{g}");
                 }
             }
-                        
-            using (StreamWriter sw = new("../../../../results/fresnel_log2log2_pade_table.csv")) {
-                for (MultiPrecision<Pow2.N16> x = 0; x <= 4; x += 0.5d) {
 
-                    bool is_e31 = false;
+            List<(MultiPrecision<Pow2.N64> xmin, MultiPrecision<Pow2.N64> xmax, MultiPrecision<Pow2.N64> limit_range)> ranges = [
+                (0.5, 1, 1 / 4096d), (1, 2, 1 / 4096d), (2, 4, 1 / 4096d), (4, 8, 1 / 4096d), (8, 16, 1 / 4096d), (16, 32, 1 / 4096d)
+            ];
 
-                    MultiPrecision<Pow2.N16> ddx = Math.ScaleB(1, -2);
-                    MultiPrecision<Pow2.N32>[] fds = FiniteDifference<Pow2.N32>.Diff(
-                        x.Convert<Pow2.N32>(), (x) => invg32(x).f, Math.ScaleB(1, -24)
-                    );
-                    MultiPrecision<Pow2.N32>[] gds = FiniteDifference<Pow2.N32>.Diff(
-                        x.Convert<Pow2.N32>(), (x) => invg32(x).g, Math.ScaleB(1, -24)
-                    );
+            using StreamWriter f_sw = new("../../../../results_disused/fresnel_scaled_f_pade_table.csv");
+            using StreamWriter g_sw = new("../../../../results_disused/fresnel_scaled_g_pade_table.csv");
 
-                    List<MultiPrecision<Pow2.N16>> fexpecteds = new(), gexpecteds = new();
+            bool approximate(MultiPrecision<Pow2.N64> xmin, MultiPrecision<Pow2.N64> xmax) {
+                Console.WriteLine($"[{xmin}, {xmax}]");
 
-                    for (MultiPrecision<Pow2.N16> dx = -ddx, h = ddx / 512; dx <= ddx; dx += h) {
-                        (MultiPrecision<Pow2.N16> fexpected, MultiPrecision<Pow2.N16> gexpected)
-                            = invg16(x + dx);
+                List<(MultiPrecision<Pow2.N64> x, MultiPrecision<Pow2.N64> f, MultiPrecision<Pow2.N64> g)> expecteds_range = [];
 
-                        fexpecteds.Add(fexpected);
-                        gexpecteds.Add(gexpected);
-                    }
+                for (MultiPrecision<Pow2.N64> x = xmin, h = (xmax - xmin) / 8192; x <= xmax; x += h) {
+                    (MultiPrecision<Pow2.N32> f, MultiPrecision<Pow2.N32> g) = invg32(x.Convert<Pow2.N32>());
 
-                    for (int n = 4; n <= 16; n += 1) {
-                        MultiPrecision<Pow2.N16>[] fcs = new MultiPrecision<Pow2.N16>[n * 2 + 1];
-                        MultiPrecision<Pow2.N16>[] gcs = new MultiPrecision<Pow2.N16>[n * 2 + 1];
-                            
-                        (fcs[0], gcs[0]) = invg16(x);
-                        for (int i = 0; i < n * 2; i++) {
-                            fcs[i + 1] = fds[i].Convert<Pow2.N16>() * MultiPrecision<Pow2.N16>.TaylorSequence[i + 1];
-                        }
-                        for (int i = 0; i < n * 2; i++) {
-                            gcs[i + 1] = gds[i].Convert<Pow2.N16>() * MultiPrecision<Pow2.N16>.TaylorSequence[i + 1];
-                        }
+                    expecteds_range.Add((x, f.Convert<Pow2.N64>(), g.Convert<Pow2.N64>()));
+                }
 
-                        (MultiPrecision<Pow2.N16>[] fms, MultiPrecision<Pow2.N16>[] fns) = PadeSolver<Pow2.N16>.Solve(fcs, n, n);
-                        (MultiPrecision<Pow2.N16>[] gms, MultiPrecision<Pow2.N16>[] gns) = PadeSolver<Pow2.N16>.Solve(gcs, n, n);
+                Console.WriteLine("expecteds computed");
 
-                        MultiPrecision<Pow2.N16> err = 0;
+                MultiPrecision<Pow2.N64> f0 = expecteds_range.First().f;
+                MultiPrecision<Pow2.N64> g0 = expecteds_range.First().g;
 
-                        for ((MultiPrecision<Pow2.N16> dx, MultiPrecision<Pow2.N16> h, int i) = (-ddx, ddx / 512, 0); i < fexpecteds.Count; dx += h, i++) {
-                            MultiPrecision<Pow2.N16> expected = fexpecteds[i];
-                            MultiPrecision<Pow2.N16> actual = PadeSolver<Pow2.N16>.Approx(dx, fms, fns);
+                Vector<Pow2.N64> xs = expecteds_range.Select(item => item.x - xmin).ToArray();
+                Vector<Pow2.N64> fs = expecteds_range.Select(item => item.f).ToArray();
+                Vector<Pow2.N64> gs = expecteds_range.Select(item => item.g).ToArray();
 
-                            err = MultiPrecision<Pow2.N16>.Max(err, MultiPrecision<Pow2.N16>.Abs(expected / actual - 1));
-                        }
+                SumTable<Pow2.N64> f_sum_table = new(xs, fs), g_sum_table = new(xs, gs);
 
-                        for ((MultiPrecision<Pow2.N16> dx, MultiPrecision<Pow2.N16> h, int i) = (-ddx, ddx / 512, 0); i < gexpecteds.Count; dx += h, i++) {
-                            MultiPrecision<Pow2.N16> expected = gexpecteds[i];
-                            MultiPrecision<Pow2.N16> actual = PadeSolver<Pow2.N16>.Approx(dx, gms, gns);
+                for (int coefs = 5; coefs <= 72; coefs++) {
+                    foreach ((int m, int n) in CurveFittingUtils.EnumeratePadeDegree(coefs, 0)) {
+                        PadeFitter<Pow2.N64> f_pade = new(f_sum_table, m, n);
+                        PadeFitter<Pow2.N64> g_pade = new(g_sum_table, m, n);
 
-                            err = MultiPrecision<Pow2.N16>.Max(err, MultiPrecision<Pow2.N16>.Abs(expected / actual - 1));
-                        }
+                        Vector<Pow2.N64> f_param = f_pade.Fit();
+                        Vector<Pow2.N64> f_errs = f_pade.Error(f_param);
 
-                        Console.WriteLine($"x={x}, n={n}, |dx| = {ddx}");
-                        Console.WriteLine($"relative error = {err:e10}");
+                        Vector<Pow2.N64> g_param = g_pade.Fit();
+                        Vector<Pow2.N64> g_errs = g_pade.Error(g_param);
 
-                        if (err < 2e-31) {
-                            sw.WriteLine($"x={x}, n={n}, |dx| = {ddx}");
+                        MultiPrecision<Pow2.N64> max_rateerr = MultiPrecision<Pow2.N64>.Max(
+                            CurveFittingUtils.MaxRelativeError(fs, f_pade.Regress(xs, f_param)),
+                            CurveFittingUtils.MaxRelativeError(gs, g_pade.Regress(xs, g_param))
+                        );
 
-                            sw.WriteLine($",i,p_i,q_i");
-                            for (int i = 0; i <= n; i++) {
-                                sw.WriteLine($"f,{i},{fms[i]:e64},{fns[i]:e64}");
-                            }
-                            for (int i = 0; i <= n; i++) {
-                                sw.WriteLine($"g,{i},{gms[i]:e64},{gns[i]:e64}");
-                            }
+                        Console.WriteLine($"m={m},n={n}");
+                        Console.WriteLine($"{max_rateerr:e20}");
 
-                            sw.WriteLine($"relative error = {err:e10}\n");
-
-                            is_e31 = true;
-
-                            sw.Flush();
-
+                        if (max_rateerr > "1e-22") {
+                            coefs += 4;
                             break;
                         }
-                    }
 
-                    if (!is_e31) {
-                        sw.WriteLine($"{x} not convergence.");
+                        if (max_rateerr < "1e-34") {
+                            return false;
+                        }
+
+                        if (max_rateerr < "1e-31" &&
+                            !CurveFittingUtils.HasLossDigitsPolynomialCoef(f_param[..m], 0, xmax - xmin) &&
+                            !CurveFittingUtils.HasLossDigitsPolynomialCoef(f_param[m..], 0, xmax - xmin) &&
+                            !CurveFittingUtils.HasLossDigitsPolynomialCoef(g_param[..m], 0, xmax - xmin) &&
+                            !CurveFittingUtils.HasLossDigitsPolynomialCoef(g_param[m..], 0, xmax - xmin)) {
+
+                            f_sw.WriteLine($"x=[{xmin},{xmax}]");
+                            f_sw.WriteLine($"samples={expecteds_range.Count}");
+                            f_sw.WriteLine($"m={m},n={n}");
+                            f_sw.WriteLine("numer");
+                            foreach (var (_, val) in f_param[..m]) {
+                                f_sw.WriteLine($"{val:e38}");
+                            }
+                            f_sw.WriteLine("denom");
+                            foreach (var (_, val) in f_param[m..]) {
+                                f_sw.WriteLine($"{val:e38}");
+                            }
+
+                            f_sw.WriteLine("coef");
+                            foreach ((var numer, var denom) in CurveFittingUtils.EnumeratePadeCoef(f_param, m, n)) {
+                                f_sw.WriteLine($"({ToFP128(numer)}, {ToFP128(denom)}),");
+                            }
+
+                            f_sw.WriteLine("relative err");
+                            f_sw.WriteLine($"{max_rateerr:e20}");
+                            f_sw.Flush();
+
+                            g_sw.WriteLine($"x=[{xmin},{xmax}]");
+                            g_sw.WriteLine($"samples={expecteds_range.Count}");
+                            g_sw.WriteLine($"m={m},n={n}");
+                            g_sw.WriteLine("numer");
+                            foreach (var (_, val) in g_param[..m]) {
+                                g_sw.WriteLine($"{val:e38}");
+                            }
+                            g_sw.WriteLine("denom");
+                            foreach (var (_, val) in g_param[m..]) {
+                                g_sw.WriteLine($"{val:e38}");
+                            }
+
+                            g_sw.WriteLine("coef");
+                            foreach ((var numer, var denom) in CurveFittingUtils.EnumeratePadeCoef(g_param, m, n)) {
+                                g_sw.WriteLine($"({ToFP128(numer)}, {ToFP128(denom)}),");
+                            }
+
+                            g_sw.WriteLine("relative err");
+                            g_sw.WriteLine($"{max_rateerr:e20}");
+                            g_sw.Flush();
+
+                            return true;
+                        }
                     }
                 }
+
+                return false;
+            }
+
+            Segmenter<Pow2.N64> segmenter = new(ranges, approximate);
+            segmenter.Execute();
+
+            foreach ((var xmin, var xmax, bool is_successs) in segmenter.ApproximatedRanges) {
+                f_sw.WriteLine($"[{xmin},{xmax}],{(is_successs ? "OK" : "NG")}");
+            }
+
+            foreach ((var xmin, var xmax, bool is_successs) in segmenter.ApproximatedRanges) {
+                g_sw.WriteLine($"[{xmin},{xmax}],{(is_successs ? "OK" : "NG")}");
             }
 
             Console.WriteLine("END");
             Console.Read();
+        }
+
+        public static string ToFP128(MultiPrecision<Pow2.N64> x) {
+            Sign sign = x.Sign;
+            long exponent = x.Exponent;
+            uint[] mantissa = x.Mantissa.Reverse().ToArray();
+
+            string code = $"({(sign == Sign.Plus ? "+1" : "-1")}, {exponent}, 0x{mantissa[0]:X8}{mantissa[1]:X8}uL, 0x{mantissa[2]:X8}{mantissa[3]:X8}uL)";
+
+            return code;
         }
     }
 }

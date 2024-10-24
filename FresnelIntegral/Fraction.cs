@@ -88,9 +88,7 @@ namespace FresnelIntegral {
             n = BigInteger.Abs(n);
 
             if (n > d) {
-                BigInteger temp = n;
-                n = d;
-                d = temp;
+                (d, n) = (n, d);
             }
 
             BigInteger rem;

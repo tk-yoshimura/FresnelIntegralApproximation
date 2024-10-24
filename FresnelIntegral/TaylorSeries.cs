@@ -10,13 +10,11 @@ namespace FresnelIntegral {
 
         static TaylorSeries() {
             v = 1;
-            table = new List<MultiPrecision<N>>(new MultiPrecision<N>[] { 1, 1 });
+            table = new List<MultiPrecision<N>>([1, 1]);
         }
 
         public static MultiPrecision<N> Value(int n) {
-            if (n < 0) {
-                throw new ArgumentOutOfRangeException(nameof(n));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(n);
 
             if (n < table.Count) {
                 return table[n];
@@ -26,7 +24,7 @@ namespace FresnelIntegral {
                 v *= m;
                 table.Add(MultiPrecision<N>.Rcp(v));
 
-                if (table[^1].IsZero) {
+                if (MultiPrecision<N>.IsZero(table[^1])) {
                     throw new ArithmeticException("taylor series is underflow.");
                 }
             }
